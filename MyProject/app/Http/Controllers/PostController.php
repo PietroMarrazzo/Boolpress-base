@@ -17,7 +17,7 @@ class PostController extends Controller
     {
         $posts = Post::orderBy('created_at', 'desc')->get();
 
-        return view('posts.index', compact('posts'));
+        return view('posts.index', compact('post'));
     }
 
     /**
@@ -55,6 +55,14 @@ class PostController extends Controller
         // save to DB
         $newPost = new Post();
         $newPost->fill($data);  //il fil() funziona solo se fillable è nel model (in questo caso post.php)
+
+        $saved = $newPost->save();
+        
+        if($saved) {
+            return redirect()->route('posts.index');
+        } else {
+            return redirect()->route('homepage');
+        }
     }
 
     /**
@@ -63,9 +71,10 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
     {
-        //
+        $post = Post::where('slug', $slug)->first();
+        return view('posts.show', compact('post'));
     }
 
     /**

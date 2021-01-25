@@ -15,7 +15,7 @@
                 <p>
                     {{ $post->description }}
                 </p>
-                <a href="">Read more...</a>
+                <a href="{{ route('posts.show', $post->slug) }}">Read more...</a>
             </article>
         @empty
             <p>
