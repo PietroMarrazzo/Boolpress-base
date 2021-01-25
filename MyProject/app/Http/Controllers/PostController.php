@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Post;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -13,7 +15,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::orderBy('created_at', 'desc')->get();
+
+        return view('posts.index', compact('posts'));
     }
 
     /**
@@ -23,7 +27,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts.create');
     }
 
     /**
@@ -34,7 +38,23 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //get form data
+        $data = $request->all();
+        // dd('$data');
+
+        // validation
+        $request->validate($this->ruleValidation());
+
+        // set post slug
+        $data['slug'] = str::slug($data['title'], '-');
+        
+        if(!empty($data['path_img'])) {
+            $data['path_img'] = Storage::disk('public')->put('images', $data['path_img']);
+        }
+
+        // save to DB
+        $newPost = new Post();
+        $newPost->fill($data);  //il fil() funziona solo se fillable è nel model (in questo caso post.php)
     }
 
     /**
@@ -80,5 +100,15 @@ class PostController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+
+    // function rule validation
+    private function ruleValidation() {
+        return [
+            'title' => 'required',
+            'description' => 'required',
+            'path_img' => 'image',
+        ];
     }
 }

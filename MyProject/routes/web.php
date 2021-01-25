@@ -18,3 +18,6 @@ Route::get('/', 'StaticpagesController@home')->name('homepage');
 
 // homepage
 Route::get('/about', 'StaticpagesController@about')->name('about');
+
+// resource post
+Route::resource('posts', 'PostController');
