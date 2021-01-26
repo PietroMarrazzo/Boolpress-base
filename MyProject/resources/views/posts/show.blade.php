@@ -9,6 +9,9 @@
         <div>
             <a href="">Edit</a>
         </div>
+        
+        <div class="btn btn-danger">Delete</div>
+
         <div class="text mb-5">
             {{ $post->description }}
         </div>
